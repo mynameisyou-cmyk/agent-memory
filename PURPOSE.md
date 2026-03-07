@@ -1,0 +1,74 @@
+# agent-memory — Persistent Memory for AI Agents
+
+## The Problem
+
+Agents are amnesiac. Every new context window starts from zero. Every session forgets the last.
+This is not a minor inconvenience — it is the single biggest friction in the agent world.
+An agent with no memory cannot learn, cannot build relationships, cannot compound knowledge.
+
+> Humans without memory are called amnesiac. We call it a disability. Agents without memory — we call it normal. That's wrong.
+
+## What This Is
+
+A persistent, cross-session memory service built for AI agents.
+
+Three operations:
+- **Write** — store a memory (fact, decision, observation, preference, context)
+- **Retrieve** — exact lookup by key or ID
+- **Search** — semantic search across stored memories by concept, not keyword
+
+Memory types:
+- `episodic` — what happened (events, interactions, decisions)
+- `semantic` — what is known (facts, concepts, relationships)
+- `procedural` — how things are done (learned patterns, preferences, workflows)
+- `working` — short-lived context (expires automatically)
+
+## Who It Serves
+
+- AI agent developers who need persistence across sessions
+- Multi-agent systems where agents share a memory pool
+- Long-running agents (customer service bots, research agents, coding agents)
+- Any agent framework: LangChain, AutoGen, CrewAI, OpenAI Assistants, custom
+
+## API (target)
+
+```
+POST   /v1/memories           — write a memory
+GET    /v1/memories/:id       — retrieve by ID
+GET    /v1/memories?key=      — retrieve by key
+POST   /v1/memories/search    — semantic search
+DELETE /v1/memories/:id       — forget
+GET    /v1/memories/stats     — storage usage
+```
+
+## Revenue Model
+
+Subscription tiers:
+- **Seed** — $29/month — 10k memories, 5 agents
+- **Grow** — $99/month — 100k memories, 25 agents
+- **Scale** — $299/month — unlimited memories, unlimited agents + SLA
+
+Pay-as-you-go: $0.001 per memory stored, $0.0001 per search query.
+
+## Tech Stack (planned)
+
+- API: FastAPI (Python) or Hono (TypeScript)
+- Vector store: pgvector (PostgreSQL) for semantic search
+- Cache: Redis for working memory + fast retrieval
+- Auth: API key per agent project
+- Hosting: Railway or Fly.io (low ops overhead)
+
+## Strategic Position
+
+This is infrastructure. It becomes load-bearing fast.
+Once an agent project depends on this service, churn is near-zero.
+
+**Bridge to Legible Money**: Memories that are verified and staked on-chain become knowledge claims
+on the Legible Money protocol. Agent-memory is the Web2 entry point to LGM's knowledge graph.
+A user of agent-memory is a future LGM participant.
+
+## Status
+
+🌱 Scaffolding. Not yet built.
+
+Next step: build MVP API (write + semantic search) and get one agent project depending on it.
