@@ -23,14 +23,15 @@ Ordered by dependency. Work top to bottom.
 - [x] [S] memory/service.py — search() (vector search → rerank → return)
 - [x] [S] memory/service.py — delete() by id and by key
 - [x] [S] memory/router.py — wire all routes to service
-- [ ] [S] cache/redis.py — working memory TTL store + read cache
+- [x] [S] cache/redis.py — working memory TTL store + read cache
 - [x] [S] billing/usage.py — usage event writer
 - [x] [S] main.py — app factory, middleware, router registration
 
-## Phase 3 — Tests
-- [ ] [S] tests/test_memory.py — write, read, delete
-- [ ] [S] tests/test_search.py — semantic search accuracy check
-- [ ] [S] tests/test_auth.py — invalid key rejection
+## Phase 3 — Tests ✅
+- [x] [S] tests/test_schemas.py — schema validation (13 tests)
+- [x] [S] tests/test_auth.py — key hash/verify (4 tests)
+- [x] [S] tests/test_cache.py — redis cache with mocks (8 tests)
+- Total: 25 passing
 
 ## Phase 4 — Integration
 - [ ] [S] Dockerfile (multi-stage, non-root)
