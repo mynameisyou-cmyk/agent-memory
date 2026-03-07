@@ -11,21 +11,21 @@ Ordered by dependency. Work top to bottom.
 - [x] [S] Write 001_initial.sql migration (projects, memories, usage_events tables)
 
 ## Phase 3 — Core Build
-- [ ] [S] config.py — env var loading, settings validation
-- [ ] [S] models.py — SQLAlchemy ORM models + DB session factory
-- [ ] [S] auth.py — API key hashing, validation middleware
-- [ ] [S] embed.py — OpenAI embedding wrapper with retry + caching
-- [ ] [S] memory/schemas.py — Pydantic models for all request/response shapes
-- [ ] [S] memory/service.py — write() logic (embed + insert + usage event)
-- [ ] [S] memory/service.py — read_by_id() and read_by_key()
-- [ ] [C] search/vector.py — pgvector cosine search query
-- [ ] [S] search/rerank.py — importance × recency reranking
-- [ ] [S] memory/service.py — search() (vector search → rerank → return)
-- [ ] [S] memory/service.py — delete() by id and by key
-- [ ] [S] memory/router.py — wire all routes to service
+- [x] [S] config.py — env var loading, settings validation
+- [x] [S] models.py — SQLAlchemy ORM models + DB session factory
+- [x] [S] auth.py — API key hashing, validation middleware
+- [x] [S] embed.py — OpenAI embedding wrapper with retry + caching
+- [x] [S] memory/schemas.py — Pydantic models for all request/response shapes
+- [x] [S] memory/service.py — write() logic (embed + insert + usage event)
+- [x] [S] memory/service.py — read_by_id() and read_by_key()
+- [x] [C] search/vector.py — pgvector cosine search (inlined in service.py)
+- [x] [S] search/rerank.py — importance × recency reranking (inlined in service.py)
+- [x] [S] memory/service.py — search() (vector search → rerank → return)
+- [x] [S] memory/service.py — delete() by id and by key
+- [x] [S] memory/router.py — wire all routes to service
 - [ ] [S] cache/redis.py — working memory TTL store + read cache
-- [ ] [S] billing/usage.py — usage event writer
-- [ ] [S] main.py — app factory, middleware, router registration
+- [x] [S] billing/usage.py — usage event writer
+- [x] [S] main.py — app factory, middleware, router registration
 
 ## Phase 3 — Tests
 - [ ] [S] tests/test_memory.py — write, read, delete
