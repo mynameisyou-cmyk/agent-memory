@@ -2,13 +2,13 @@
 
 Ordered by dependency. Work top to bottom.
 
-## Phase 2 — Scaffold
-- [ ] [S] Init pyproject.toml (FastAPI, SQLAlchemy, pgvector, redis, pydantic, openai)
-- [ ] [S] Create directory structure per ARCHITECTURE.md
-- [ ] [S] Write stub files (main.py, config.py, auth.py, models.py, embed.py)
-- [ ] [T] Write .env.example
-- [ ] [T] Write docker-compose.yml (postgres 16 + pgvector, redis)
-- [ ] [S] Write 001_initial.sql migration (projects, memories, usage_events tables)
+## Phase 2 — Scaffold ✅
+- [x] [S] Init pyproject.toml (FastAPI, SQLAlchemy, pgvector, redis, pydantic, openai)
+- [x] [S] Create directory structure per ARCHITECTURE.md
+- [x] [S] Write stub files (main.py, config.py, auth.py, models.py, embed.py)
+- [x] [T] Write .env.example
+- [x] [T] Write docker-compose.yml (postgres 16 + pgvector, redis)
+- [x] [S] Write 001_initial.sql migration (projects, memories, usage_events tables)
 
 ## Phase 3 — Core Build
 - [ ] [S] config.py — env var loading, settings validation

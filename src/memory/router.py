@@ -2,14 +2,96 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+import uuid
 
-router = APIRouter(prefix="/v1/memories", tags=["memories"])
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
-# TODO: implement routes in core-build phase
-# POST   /              → create memory
-# GET    /{memory_id}   → read by id
-# GET    /?key=&agent_id= → read by key
-# POST   /search        → semantic search
-# DELETE /{memory_id}   → delete by id
-# DELETE /?key=         → delete by key
+from ..auth import get_db, get_project
+from ..billing.usage import get_usage
+from ..models import Project
+from . import service
+from .schemas import (
+    MemoryCreate,
+    MemoryCreated,
+    MemoryDeleted,
+    MemoryOut,
+    MemorySearch,
+    MemorySearchResult,
+    UsageOut,
+)
+
+router = APIRouter(prefix="/v1", tags=["memories"])
+
+
+@router.post("/memories", response_model=MemoryCreated, status_code=201)
+async def create_memory(
+    data: MemoryCreate,
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> MemoryCreated:
+    """Store a new memory."""
+    return await service.write(db, project.id, data)
+
+
+@router.get("/memories/{memory_id}", response_model=MemoryOut)
+async def read_memory(
+    memory_id: uuid.UUID,
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> MemoryOut:
+    """Retrieve a memory by ID."""
+    result = await service.read_by_id(db, project.id, memory_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    return result
+
+
+@router.get("/memories", response_model=list[MemoryOut])
+async def read_memories_by_key(
+    key: str = Query(...),
+    agent_id: str | None = Query(None),
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> list[MemoryOut]:
+    """Retrieve memories by key."""
+    return await service.read_by_key(db, project.id, key, agent_id)
+
+
+@router.post("/memories/search", response_model=list[MemorySearchResult])
+async def search_memories(
+    params: MemorySearch,
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> list[MemorySearchResult]:
+    """Semantic search across stored memories."""
+    return await service.search(db, project.id, params)
+
+
+@router.delete("/memories/{memory_id}", response_model=MemoryDeleted)
+async def delete_memory(
+    memory_id: uuid.UUID,
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> MemoryDeleted:
+    """Delete a memory by ID."""
+    return await service.delete_by_id(db, project.id, memory_id)
+
+
+@router.delete("/memories", response_model=MemoryDeleted)
+async def delete_memories_by_key(
+    key: str = Query(...),
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> MemoryDeleted:
+    """Delete all memories with a given key."""
+    return await service.delete_by_key(db, project.id, key)
+
+
+@router.get("/usage", response_model=UsageOut)
+async def usage(
+    project: Project = Depends(get_project),
+    db: AsyncSession = Depends(get_db),
+) -> UsageOut:
+    """Get usage statistics for the current project."""
+    return await get_usage(db, project.id, project.plan)
