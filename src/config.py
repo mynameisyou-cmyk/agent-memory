@@ -33,7 +33,18 @@ class Settings(BaseSettings):
     grow_memory_limit: int = 100_000
     grow_agent_limit: int = 25
 
+    # Rate limits (requests per minute per project)
+    seed_rate_limit: int = 30
+    grow_rate_limit: int = 120
+    scale_rate_limit: int = 600
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 
 settings = Settings()
+
+PLAN_RATE_LIMITS: dict[str, int] = {
+    "seed": settings.seed_rate_limit,
+    "grow": settings.grow_rate_limit,
+    "scale": settings.scale_rate_limit,
+}
