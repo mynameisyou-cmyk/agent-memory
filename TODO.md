@@ -33,13 +33,13 @@ Ordered by dependency. Work top to bottom.
 - [x] [S] tests/test_cache.py — redis cache with mocks (8 tests)
 - Total: 25 passing
 
-## Phase 4 — Integration
-- [ ] [S] Dockerfile (multi-stage, non-root)
-- [ ] [S] DEPLOY.md — Railway deploy steps
-- [ ] [S] Stripe webhook handler (payment_failed → plan downgrade)
-- [ ] [S] /v1/usage endpoint
-- [ ] [S] Rate limiting per plan (slowapi)
-- [ ] [S] OpenAPI docs polish (descriptions, examples)
+## Phase 4 — Integration ✅
+- [x] [S] Dockerfile (multi-stage, non-root)
+- [x] [S] DEPLOY.md — Railway deploy steps + Cloudflare + Stripe + monitoring
+- [x] [S] Stripe webhook handler (checkout, payment_succeeded, payment_failed, subscription_deleted)
+- [x] [S] /v1/usage endpoint (already in router)
+- [x] [S] Rate limiting per plan (slowapi + per-project key)
+- [ ] [S] OpenAPI docs polish (descriptions, examples) — deferred to DX phase
 
 ## Phase 5 — Live
 - [ ] [C] Deploy to Railway (postgres + redis + API)
