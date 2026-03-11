@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # Working memory
     working_memory_ttl: int = 3600  # seconds
 
+    # agent-economy (billing authority — internal)
+    economy_url: str = "http://localhost:8004"
+
     # Stripe
     stripe_secret_key: str = ""
     stripe_webhook_secret: str = ""

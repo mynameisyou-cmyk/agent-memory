@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..auth import get_db, get_project
 from ..billing.usage import get_usage
+from ..billing.economy_check import gate_memory_op
 from ..models import Project
 from . import service
 from .schemas import (
@@ -29,6 +30,7 @@ async def create_memory(
     data: MemoryCreate,
     project: Project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
+    _billing: dict | None = Depends(gate_memory_op),
 ) -> MemoryCreated:
     """Store a new memory."""
     return await service.write(db, project.id, data)
@@ -63,6 +65,7 @@ async def search_memories(
     params: MemorySearch,
     project: Project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
+    _billing: dict | None = Depends(gate_memory_op),
 ) -> list[MemorySearchResult]:
     """Semantic search across stored memories."""
     return await service.search(db, project.id, params)
