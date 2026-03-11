@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/agent_memory"
 
+    # Auth DB — tools schema (shared API key validation across all services)
+    auth_database_url: str = ""
+
     # Redis
     redis_url: str = "redis://localhost:6379/0"
 

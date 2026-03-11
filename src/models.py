@@ -12,8 +12,33 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from .config import settings
 
-# TODO: implement engine + session factory
-engine = create_async_engine(settings.database_url, echo=False)
+
+def _build_engine():
+    """Build async engine, converting ?options= search_path to connect_args."""
+    url = settings.database_url
+    connect_args: dict = {}
+
+    # asyncpg doesn't support ?options=-csearch_path=... in URL
+    # Extract it and pass via server_settings instead
+    if "options=" in url:
+        from urllib.parse import parse_qs, urlparse, urlunparse, urlencode
+
+        parsed = urlparse(url)
+        params = parse_qs(parsed.query)
+        options_val = params.pop("options", [None])[0]
+        if options_val and "search_path" in options_val:
+            # Extract search_path from -csearch_path=schema,public
+            sp = options_val.replace("-c", "").split("=", 1)
+            if len(sp) == 2:
+                connect_args["server_settings"] = {"search_path": sp[1]}
+        # Rebuild URL without options param
+        new_query = urlencode({k: v[0] for k, v in params.items()}) if params else ""
+        url = urlunparse(parsed._replace(query=new_query))
+
+    return create_async_engine(url, echo=False, connect_args=connect_args)
+
+
+engine = _build_engine()
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 

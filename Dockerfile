@@ -13,8 +13,8 @@ RUN useradd --create-home --shell /bin/bash app
 WORKDIR /app
 
 COPY --from=builder /install /usr/local
-COPY src/ src/
-COPY migrations/ migrations/
+COPY --chown=app:app src/ src/
+COPY --chown=app:app migrations/ migrations/
 
 USER app
 

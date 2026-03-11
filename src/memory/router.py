@@ -28,7 +28,7 @@ router = APIRouter(prefix="/v1", tags=["memories"])
 @router.post("/memories", response_model=MemoryCreated, status_code=201)
 async def create_memory(
     data: MemoryCreate,
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
     _billing: dict | None = Depends(gate_memory_op),
 ) -> MemoryCreated:
@@ -39,7 +39,7 @@ async def create_memory(
 @router.get("/memories/{memory_id}", response_model=MemoryOut)
 async def read_memory(
     memory_id: uuid.UUID,
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
 ) -> MemoryOut:
     """Retrieve a memory by ID."""
@@ -53,7 +53,7 @@ async def read_memory(
 async def read_memories_by_key(
     key: str = Query(...),
     agent_id: str | None = Query(None),
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
 ) -> list[MemoryOut]:
     """Retrieve memories by key."""
@@ -63,7 +63,7 @@ async def read_memories_by_key(
 @router.post("/memories/search", response_model=list[MemorySearchResult])
 async def search_memories(
     params: MemorySearch,
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
     _billing: dict | None = Depends(gate_memory_op),
 ) -> list[MemorySearchResult]:
@@ -74,7 +74,7 @@ async def search_memories(
 @router.delete("/memories/{memory_id}", response_model=MemoryDeleted)
 async def delete_memory(
     memory_id: uuid.UUID,
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
 ) -> MemoryDeleted:
     """Delete a memory by ID."""
@@ -84,7 +84,7 @@ async def delete_memory(
 @router.delete("/memories", response_model=MemoryDeleted)
 async def delete_memories_by_key(
     key: str = Query(...),
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
 ) -> MemoryDeleted:
     """Delete all memories with a given key."""
@@ -93,7 +93,7 @@ async def delete_memories_by_key(
 
 @router.get("/usage", response_model=UsageOut)
 async def usage(
-    project: Project = Depends(get_project),
+    project = Depends(get_project),
     db: AsyncSession = Depends(get_db),
 ) -> UsageOut:
     """Get usage statistics for the current project."""

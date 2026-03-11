@@ -10,17 +10,17 @@ import logging
 from typing import Literal
 
 import httpx
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 
 from ..config import settings
-from ..models import Project
+from ..auth import get_project
 
 logger = logging.getLogger(__name__)
 
 Resource = Literal["memory_ops", "tool_calls", "verifications"]
 
 
-async def check_billing_limit(project: Project, resource: Resource) -> dict | None:
+async def check_billing_limit(project, resource: Resource) -> dict | None:
     """
     Call agent-economy /v1/billing/check. Returns None on error (fail-open).
     Raises HTTP 429 if the project has exceeded its daily limit.
@@ -67,6 +67,6 @@ async def check_billing_limit(project: Project, resource: Resource) -> dict | No
         return None
 
 
-async def gate_memory_op(project: Project) -> dict | None:
+async def gate_memory_op(project = Depends(get_project)) -> dict | None:
     """FastAPI dependency: check memory_ops limit."""
     return await check_billing_limit(project, "memory_ops")

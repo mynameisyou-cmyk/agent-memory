@@ -13,7 +13,7 @@ from slowapi.errors import RateLimitExceeded
 from .config import settings
 from .billing.stripe_webhooks import router as billing_router
 from .memory.router import router as memory_router
-from .models import engine
+from .models import Base, engine
 from .ratelimit import limiter, rate_limit_handler
 
 logging.basicConfig(level=settings.log_level.upper())
@@ -24,6 +24,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     logger.info("agent-memory starting up")
+    # Auto-create tables on startup (idempotent)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    logger.info("Database tables ready")
     yield
     logger.info("agent-memory shutting down")
     await engine.dispose()
